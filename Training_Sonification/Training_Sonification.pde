@@ -14,6 +14,10 @@ Panner p;
 Gain gain;
 Glide glide;
 
+float balance = 0;
+int framecount = 0;
+boolean speak = true;
+
 void setup() {
   size(700,700);
   ttsMaker = new TextToSpeechMaker();
@@ -34,9 +38,21 @@ void setup() {
 
 void draw() {
   background(0);
+  if (abs(balance) > 0.5 && speak) {
+     speach("Lean " + ((balance>0)?"left.":"right.")); 
+     speak = false;
+  } 
+  framecount++;
+  if (framecount > 150) {
+     framecount=0;
+     speak = true;
+  }
+
 }
 
 void Balance(float b) {
+  balance = b;
   p.setPos(b);
   glide.setValue(abs(b/4));
+  wp.setFrequency(440 + (b * 50));
 }
