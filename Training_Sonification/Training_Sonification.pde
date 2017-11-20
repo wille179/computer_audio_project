@@ -2,57 +2,55 @@ import controlP5.*;
 import beads.*;
 import org.jaudiolibs.beads.*;
 
+// ----- System Variables ------
 ControlP5 p5;
 AudioContext ac;
+PWindow win;
 TextToSpeechMaker ttsMaker;
 SamplePlayer ttsVoice;
+int[] gridHoriz = new int[9];
+int[] gridVert = new int[9];
+int gridWidth = 700;
+int gridHeight = 700;
 
-SamplePlayer sp;
+// ----- Sonification Vars -----
 
-WavePlayer wp;
-Panner p;
-Gain gain;
-Glide glide;
-
-float balance = 0;
-int framecount = 0;
-boolean speak = true;
+public void settings() {
+  size(gridWidth,gridHeight);
+}
 
 void setup() {
-  size(700,700);
   ttsMaker = new TextToSpeechMaker();
   ac = new AudioContext();
-  p5 = new ControlP5(this);
-  wp = new WavePlayer(ac,440,Buffer.SINE);
-  p = new Panner(ac);
+  win = new PWindow();
+  surface.setTitle("Wizard's Magic Grid");
   
-  glide = new Glide(ac,0.5,20);
-  gain = new Gain(ac,1,glide);
-  gain.addInput(wp);
-  p.addInput(gain);
-  ac.out.addInput(p);
-  p5.addSlider("Balance").setPosition(20,20).setSize(600,20).setRange(-1,1).setValue(0).setLabel("Balance Position");
-  
-  ac.start();
+  //ac.start();
 }
 
 void draw() {
   background(0);
-  if (abs(balance) > 0.5 && speak) {
-     speach("Lean " + ((balance>0)?"left.":"right.")); 
-     speak = false;
-  } 
-  framecount++;
-  if (framecount > 150) {
-     framecount=0;
-     speak = true;
-  }
-
+  drawGrid(gridVert,gridHoriz);
 }
 
-void Balance(float b) {
-  balance = b;
-  p.setPos(b);
-  glide.setValue(abs(b/4));
-  wp.setFrequency(440 + (b * 50));
+class PWindow extends PApplet {
+  
+  PWindow() {
+    super();
+    PApplet.runSketch(new String[] {"Test"}, this);
+  }
+
+  void settings() {
+    size(700, 200);
+  }
+
+  void setup() {
+    p5 = new ControlP5(this);
+    setupP5();
+    surface.setTitle("Control Menu");
+  }
+
+  void draw() {
+    background(100);
+  }
 }
