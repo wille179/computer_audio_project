@@ -24,12 +24,12 @@ void setupSound() {
 }
 
 void updateSound() {
-  p.setPos(gridX);
+  p.setPos(gridX*1.2);
   if (workout != -1 && abs(gridX) > 0.2) {
     beep.pause(false);
   } else {
     beep.pause(true);
   }
-  beepRateGlide.setValue(1.01+abs(gridX)*1.9);
+  beepRateGlide.setValue(1.01+abs(gridX)*2.3);
   beep.setRate(beepRateGlide);
 }

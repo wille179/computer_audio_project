@@ -8,11 +8,11 @@ ControlWindow cWin;
 ControlP5 p5;
 TextToSpeechMaker ttsMaker;
 SamplePlayer ttsVoice;
-int[] gridHoriz = {2,4,6,8,10,12,14,16,18};
-int[] gridVert = {2,4,6,8,10,12,14,16,18};
+float[] gridHoriz = {4,16};
+float[] gridVert = {2,4,6,8,10,12,14,16,18};
 int gridWidth = 600;
 int gridHeight = 600;
-int buffer = 100;
+int buffer = 150;
 int b2 = buffer/2;
 // gridX and gridY are a value between -1 and 1 showing the position of the mouse on the grid.
 float gridX = 0;

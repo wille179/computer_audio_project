@@ -29,12 +29,10 @@ void setupP5() {
     center=4, 
     green=5, yellow=6, orange=7, red=8
   horiz lines = y bar.
-    Red=0, orange=1, yellow=2, green=3, 
-    center=4, 
-    green=5, yellow=6, orange=7, red=8
+    
   
 */
-void drawGrid(int cX, int cY, int[] vL, int[] hL) {
+void drawGrid(int cX, int cY, float[] vL, float[] hL) {
   int lines = 20;
   int squareWidth = gridWidth/lines;
   int squareHeight = gridHeight/lines;
@@ -71,6 +69,13 @@ void drawGrid(int cX, int cY, int[] vL, int[] hL) {
   stroke(255); //White
   line((lines/2)*squareHeight+cX,cY,(lines/2)*squareHeight+cX,gridHeight+cY);
   line(cX,(lines/2)*squareWidth+cY,gridWidth+cX,(lines/2)*squareWidth+cY);
+  
+  strokeWeight(5);
+  stroke(255,59,33);
+  line(cX,hL[0]*squareHeight+cY,gridWidth+cX,hL[0]*squareHeight+cY);
+  
+  stroke(53,229,0);
+  line(cX,hL[1]*squareHeight+cY,gridWidth+cX,hL[1]*squareHeight+cY);
   
   fill(255);
   textSize(30);
