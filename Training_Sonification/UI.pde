@@ -1,6 +1,26 @@
+RadioButton modeRadio;
+
 void setupP5() {
-  
+    modeRadio = p5.addRadioButton("ModeRadioButton")
+      .setPosition(40,40)
+      .setSize(40,40)
+      .setColorForeground(color(120))
+      .setColorActive(color(255))
+      .setColorLabel(color(255))
+      .setItemsPerRow(1);
+    for (int i = 0; i< workoutLabel.length; i++) {
+      modeRadio.addItem(workoutLabel[i],i);
+    }
+    p5.addSlider("MasterVolume")
+      .setPosition(240,40)
+      .setSize(300,25)
+      .setRange(0,1)
+      .setValue(0.5)
+      .setLabel("Volume");
 }
+
+
+
 
 /* 
   Corners = {x1, y1, x2, y2}
