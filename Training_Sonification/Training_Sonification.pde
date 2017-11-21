@@ -31,6 +31,7 @@ void setup() {
   setupSound();
 }
 
+//Draws the grid in the main window, updates the global variables gridX and gridY with values between -1 and 1 as apropriate.
 void draw() {
   background(0);
   drawGrid(b2,b2,gridVert,gridHoriz);
@@ -44,41 +45,50 @@ void draw() {
 }
 
 
-
+//Class for managing menu window.
 public class ControlWindow extends PApplet {
   
+  //Setup for menu window.
   ControlWindow() {
     super();
     PApplet.runSketch(new String[] {"Test"}, this);
   }
 
+  //Setup for menu window.
   void settings() {
     size(700, 300);
   }
 
+  //Setup for menu window.
   void setup() {
     surface.setTitle("Control Menu");
     p5 = new ControlP5(this);
     setupP5();
   }
 
+  //Drawing menu window.
   void draw() {
     background(100);
   }
   
+  //Watches for keypresses and switches modes appropriately.
   void keyPressed() {
-  switch(key) {
-    case('0'): modeRadio.deactivateAll(); workout=-1;break;
-    case('1'): modeRadio.activate(0); workout=0; break;
-    case('2'): modeRadio.activate(1); workout=1;break;
-    case('3'): modeRadio.activate(2); workout=2;break;
+    switch(key) {
+      case('0'): modeRadio.deactivateAll(); workout=-1;break;
+      case('1'): modeRadio.activate(0); workout=0; break;
+      case('2'): modeRadio.activate(1); workout=1;break;
+      case('3'): modeRadio.activate(2); workout=2;break;
+    }
+    setThresholds();
   }
   
-}
+  //Switches mode when radio button is selected.
   void ModeRadioButton(int mode) {
     workout = mode;
+    setThresholds();
   }
   
+  //Adjusts master volume when slider is moved.
   void MasterVolume(float vol) {
     master_glide.setValue(vol/10.0);
   }

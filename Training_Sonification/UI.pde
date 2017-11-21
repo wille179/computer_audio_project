@@ -1,5 +1,6 @@
 RadioButton modeRadio;
 
+// Sets up the controlP5 menu for the secondary window.
 void setupP5() {
     modeRadio = p5.addRadioButton("ModeRadioButton")
       .setPosition(40,40)
@@ -23,6 +24,8 @@ void setupP5() {
 
 
 /* 
+  Draws the grid in the main window based on the given parameters.
+
   Corners = {x1, y1, x2, y2}
   vert lines = x bar. 
     Red=0, orange=1, yellow=2, green=3, 
