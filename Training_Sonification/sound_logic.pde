@@ -11,7 +11,8 @@ final String[] workoutLabel = {"Bench Press","Squat","Dead Lift"};
 int reps = 0; //Reps done
 int reps_wanted = 10; //Reps desired for a set
 float[] repScores = new float[reps_wanted]; //For storing a score for a rep. Might need to find a better system.
-int[] repThresholds = new int[2]; //For matching the sonification to the vertical motion and horizontal lines on grid.
+float[] repThresholds = new float[2]; //For matching the sonification to the vertical motion and horizontal lines on grid.
+boolean startWorkout = false;
 
 //Initializes the sonification.
 void setupSound() {  
@@ -32,8 +33,11 @@ void setupSound() {
 //Updates the sonification.
 //This is where all the magic happens.
 void updateSound() {
+  if (workout == -1) {
+    startWorkout = false;
+  }
   p.setPos(gridX*1.2);
-  if (workout != -1 && abs(gridX) > 0.2) {
+  if (startWorkout && workout != -1 && abs(gridX) > 0.2) {
     beep.pause(false);
   } else {
     beep.pause(true);
@@ -45,13 +49,26 @@ void updateSound() {
 //Helper method for updating the thresholds when workout mode changes.
 void setThresholds() {
   switch(workout) {
-    //TODO: switch gridHoriz (horizontal red/green lines) and repThresholds (data regarding sonification) based on workout mode.
-    case(0): 
+    //Green red Green
+    //Voice at second green
+    case(0):
+      //Down
+      repThresholds[0] = 14;
+      repThresholds[1] = 6;
       break;
-    case(1): 
+    case(1):
+      //Down
+      repThresholds[0] = 17;
+      repThresholds[1] = 5;
       break;
     case(2):
+      //Up
+      repThresholds[0] = 7;
+      repThresholds[1] = 19;
       break;
+    default:
+      repThresholds[0] = 0;
+      repThresholds[1] = 0;
   }
     
 }

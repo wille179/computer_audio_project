@@ -8,7 +8,6 @@ ControlWindow cWin;
 ControlP5 p5;
 TextToSpeechMaker ttsMaker;
 SamplePlayer ttsVoice;
-float[] gridHoriz = {4,16};
 float[] gridVert = {2,4,6,8,10,12,14,16,18};
 int gridWidth = 600;
 int gridHeight = 600;
@@ -34,7 +33,7 @@ void setup() {
 //Draws the grid in the main window, updates the global variables gridX and gridY with values between -1 and 1 as apropriate.
 void draw() {
   background(0);
-  drawGrid(b2,b2,gridVert,gridHoriz);
+  drawGrid(b2,b2,gridVert,repThresholds);
   stroke(0,255,255);
   fill(0,255,255);
   
@@ -44,6 +43,9 @@ void draw() {
   updateSound();
 }
 
+void mousePressed() {
+  startWorkout = !startWorkout;
+}
 
 //Class for managing menu window.
 public class ControlWindow extends PApplet {
@@ -69,6 +71,8 @@ public class ControlWindow extends PApplet {
   //Drawing menu window.
   void draw() {
     background(100);
+    text((!startWorkout?"Workout Paused":"Workout In Progress"),200,90);
+    text("Reps: " + reps,200,110);
   }
   
   //Watches for keypresses and switches modes appropriately.
