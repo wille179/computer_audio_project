@@ -46,6 +46,7 @@ void draw() {
 void mousePressed() {
   //resets workout, toggles start/stop
   startWorkout = !startWorkout;
+  if (workout >= 0) speach(startWorkout?"Starting " + workoutLabel[workout]:"Stoping workout.");
   reps = 0; //Reps done
   repScores = new float[reps_wanted]; //For storing a score for a rep. Might need to find a better system.
   repHalfDone = false;
@@ -85,7 +86,7 @@ public class ControlWindow extends PApplet {
   void keyPressed() {
     switch(key) {
       case('0'): modeRadio.deactivateAll(); workout=-1;break;
-      case('1'): modeRadio.activate(0); workout=0; break;
+      case('1'): modeRadio.activate(0); workout=0;break;
       case('2'): modeRadio.activate(1); workout=1;break;
       case('3'): modeRadio.activate(2); workout=2;break;
     }
@@ -95,6 +96,7 @@ public class ControlWindow extends PApplet {
   //Switches mode when radio button is selected.
   void ModeRadioButton(int mode) {
     workout = mode;
+    if (mode >= 0) speach(workoutLabel[mode]);
     setThresholds();
   }
   
@@ -107,8 +109,10 @@ public class ControlWindow extends PApplet {
     println("Mirror Sound" + mirror);
     if (mirror == 1) {
       mirror_sound = true;
+      speach("Mirroring Sonification");
     } else {
       mirror_sound = false;
+      speach("Default Sonification");
     }
   }
 }

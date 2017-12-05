@@ -21,7 +21,7 @@ SamplePlayer lean_right;
 
 // ----- Logic vars -----
 int workout = -1; // -1 means no sonification.
-final String[] workoutLabel = {"Bench Press","Squat","Dead Lift"};
+final String[] workoutLabel = {"Bench Press","Squats","Dead Lift"};
 int reps = 0; //Reps done
 int reps_wanted = 10; //Reps desired for a set
 float[] repScores = new float[reps_wanted]; //For storing a score for a rep. Might need to find a better system.
@@ -150,7 +150,7 @@ void updateWorkout() {
           reps += 1;
           String words = "" + reps;
           words += (reps == 0.5 * reps_wanted)?", half way done.":"";
-          words += (reps == reps_wanted)?", you are done.":".";
+          words += (reps == reps_wanted)?", you are done with" + workoutLabel[workout] + ".":".";
           speach(words);
         }
       } else {
@@ -193,7 +193,7 @@ void updateWorkout() {
       }
     }
   } else {
-    //TODO: Summarize workout, startWorkout = false
+    //TODO: Summarize workout
     startWorkout = false;
   }
   
