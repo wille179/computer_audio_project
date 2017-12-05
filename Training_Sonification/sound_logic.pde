@@ -55,10 +55,14 @@ void setupSound() {
   power_tone_gain = new Gain(ac, 1, power_tone_glide);
   power_tone_gain.addInput(power_tone);
   
-  master_glide = new Glide(ac,0.1,20);
+  rep_ding = getSamplePlayer("rep_ding.wav");
+  rep_ding.pause(true);
+  
+  master_glide = new Glide(ac,0.2,20);
   master_gain = new Gain(ac,2,master_glide);
   master_gain.addInput(p);
   master_gain.addInput(power_tone_gain);
+  master_gain.addInput(rep_ding);
   ac.out.addInput(master_gain);
   ac.start();
   
@@ -144,16 +148,22 @@ void updateWorkout() {
           repHalfDone = false;
           repInProgress = false;
           reps += 1;
+          String words = "" + reps;
+          words += (reps == 0.5 * reps_wanted)?", half way done.":"";
+          words += (reps == reps_wanted)?", you are done.":".";
+          speach(words);
         }
       } else {
         if (gridY <= red) {
           repHalfDone = true;
-          //TODO: play ding
+          rep_ding.pause(false);
         }
       }
     } else {
       if (gridY >= green) {
         repInProgress = true;
+        rep_ding.setPosition(0);
+        rep_ding.pause(true);
       } else {
         startWorkout = false;
       }
@@ -165,16 +175,19 @@ void updateWorkout() {
           repHalfDone = false;
           repInProgress = false;
           reps += 1;
+          speach(reps + ".");
         }
       } else {
         if (gridY >= red) {
           repHalfDone = true;
-          //TODO: play ding
+          rep_ding.pause(false);
         }
       }
     } else {
       if (gridY <= green) {
         repInProgress = true;
+        rep_ding.setPosition(0);
+        rep_ding.pause(true);
       } else {
         startWorkout = false;
       }

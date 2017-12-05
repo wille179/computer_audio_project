@@ -78,7 +78,7 @@ public class ControlWindow extends PApplet {
   void draw() {
     background(100);
     text((!startWorkout?"Workout Paused":"Workout In Progress"),200,90);
-    text("Reps: " + reps,200,110);
+    text("Reps: " + reps + " / " + reps_wanted,200,110);
   }
   
   //Watches for keypresses and switches modes appropriately.
@@ -100,7 +100,7 @@ public class ControlWindow extends PApplet {
   
   //Adjusts master volume when slider is moved.
   void MasterVolume(float vol) {
-    master_glide.setValue(vol/10.0);
+    master_glide.setValue(vol/5.0);
   }
   
   void MirrorSound(int mirror) {

@@ -23,7 +23,8 @@ void setupP5() {
       .setPosition(590,40)
       .setSize(30,30)
       .addItem("Default Sound",0)
-      .addItem("Mirrored Sound",1);
+      .addItem("Mirrored Sound",1)
+      .activate(0);
 }
 
 
