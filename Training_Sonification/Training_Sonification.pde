@@ -96,4 +96,13 @@ public class ControlWindow extends PApplet {
   void MasterVolume(float vol) {
     master_glide.setValue(vol/10.0);
   }
+  
+  void MirrorSound(int mirror) {
+    println("Mirror Sound" + mirror);
+    if (mirror == 1) {
+      mirror_sound = true;
+    } else {
+      mirror_sound = false;
+    }
+  }
 }

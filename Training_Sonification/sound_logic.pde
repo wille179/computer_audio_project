@@ -1,9 +1,21 @@
 // ----- Sonification vars -----
 Gain master_gain;
 Glide master_glide;
+
 SamplePlayer beep;
 Glide beepRateGlide;
 Panner p;
+boolean mirror_sound = false;
+
+WavePlayer power_tone;
+Gain power_tone_gain;
+Glide power_tone_glide;
+
+SamplePlayer rep_ding;
+SamplePlayer lean_left;
+SamplePlayer lean_right;
+
+
 
 // ----- Logic vars -----
 int workout = -1; // -1 means no sonification.
@@ -12,6 +24,8 @@ int reps = 0; //Reps done
 int reps_wanted = 10; //Reps desired for a set
 float[] repScores = new float[reps_wanted]; //For storing a score for a rep. Might need to find a better system.
 float[] repThresholds = new float[2]; //For matching the sonification to the vertical motion and horizontal lines on grid.
+boolean repHalfDone = false;
+int repTimer = 0;
 boolean startWorkout = false;
 
 //Initializes the sonification.
@@ -22,7 +36,16 @@ void setupSound() {
   beepRateGlide = new Glide(ac,1.0,10);
   p = new Panner(ac);
   p.addInput(beep);
-  master_glide = new Glide(ac,0.05,20);
+  
+  lean_left = getSamplePlayer("tts_common/lean_left.wav");
+  lean_left.pause(true);
+  lean_right = getSamplePlayer("tts_common/lean_right.wav");
+  lean_right.pause(true);
+  
+  p.addInput(lean_left);
+  p.addInput(lean_right);
+  
+  master_glide = new Glide(ac,0.1,20);
   master_gain = new Gain(ac,2,master_glide);
   master_gain.addInput(p);
   ac.out.addInput(master_gain);
@@ -36,14 +59,23 @@ void updateSound() {
   if (workout == -1) {
     startWorkout = false;
   }
-  p.setPos(gridX*1.2);
+  p.setPos(gridX*1.2*(mirror_sound?-1:1));
   if (startWorkout && workout != -1 && abs(gridX) > 0.2) {
     beep.pause(false);
+    lean_left.pause(true);
+    lean_right.pause(true);
+    float lean_limit = 0.5 * (mirror_sound?-1:1);
+    if (gridX < -1 * lean_limit) {
+      lean_right.pause(false);
+    } else if (gridX > lean_limit) {
+      lean_left.pause(false);
+    }
   } else {
     beep.pause(true);
   }
   beepRateGlide.setValue(1.01+abs(gridX)*2.3);
   beep.setRate(beepRateGlide);
+  updateWorkout();
 }
 
 //Helper method for updating the thresholds when workout mode changes.
@@ -71,4 +103,19 @@ void setThresholds() {
       repThresholds[1] = 0;
   }
     
+}
+
+void updateWorkout() {
+  if (!startWorkout || workout < 0) {
+    return;
+  }
+  float bottom =  max(repThresholds[0],repThresholds[1]);
+  float top = min(repThresholds[0],repThresholds[1]);
+  if (workout == 0) { //Bench Press
+    
+  } else if (workout == 1) {//Squat
+    
+  } else { //Dead Lift
+    
+  }
 }

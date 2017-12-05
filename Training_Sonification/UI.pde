@@ -16,8 +16,13 @@ void setupP5() {
       .setPosition(240,40)
       .setSize(300,25)
       .setRange(0,1)
-      .setValue(0.5)
+      .setValue(1)
       .setLabel("Volume");
+    p5.addRadioButton("MirrorSound")
+      .setPosition(590,40)
+      .setSize(30,30)
+      .addItem("Default Sound",0)
+      .addItem("Mirrored Sound",1);
 }
 
 
