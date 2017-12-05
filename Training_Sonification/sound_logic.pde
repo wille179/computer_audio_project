@@ -8,6 +8,8 @@ Panner p;
 boolean mirror_sound = false;
 
 WavePlayer power_tone;
+Glide power_tone_pitch;
+float pt_pitch = 65;
 Gain power_tone_gain;
 Glide power_tone_glide;
 
@@ -46,9 +48,17 @@ void setupSound() {
   p.addInput(lean_left);
   p.addInput(lean_right);
   
+  power_tone_pitch = new Glide(ac, pt_pitch, 20);
+  power_tone = new WavePlayer(ac, power_tone_pitch, Buffer.TRIANGLE);
+  power_tone.pause(false);
+  power_tone_glide = new Glide(ac, 0.6,10);
+  power_tone_gain = new Gain(ac, 1, power_tone_glide);
+  power_tone_gain.addInput(power_tone);
+  
   master_glide = new Glide(ac,0.1,20);
   master_gain = new Gain(ac,2,master_glide);
   master_gain.addInput(p);
+  master_gain.addInput(power_tone_gain);
   ac.out.addInput(master_gain);
   ac.start();
   
@@ -60,10 +70,10 @@ void updateSound() {
   if (workout == -1) {
     startWorkout = false;
   }
-  if(lean_left.getSample().getLength() * 3 < lean_left.getPosition()){
+  if(lean_left.getSample().getLength() * (3-abs(gridX)) < lean_left.getPosition()){
     lean_left.setPosition(0);
   }
-  if (lean_right.getSample().getLength() * 3 < lean_right.getPosition()) {
+  if (lean_right.getSample().getLength() * (3-abs(gridX * 1.2)) < lean_right.getPosition()) {
     lean_right.setPosition(0);
   }
   
@@ -72,7 +82,7 @@ void updateSound() {
     beep.pause(false);
     lean_left.pause(true);
     lean_right.pause(true);
-    float lean_limit = 0.5 * (mirror_sound?-1:1);
+    float lean_limit = 0.4 * (mirror_sound?-1:1);
     if (gridX < -1 * lean_limit) {
       lean_right.pause(false);
     } else if (gridX > lean_limit) {
@@ -115,10 +125,15 @@ void setThresholds() {
 
 void updateWorkout() {
   if (!startWorkout || workout < 0) {
+    power_tone.pause(true);
     return;
   }
-  float bottom = max(repThresholds[0],repThresholds[1]) / (lines*-1.0);
-  float top = min(repThresholds[0],repThresholds[1]) / (lines*-1.0);
+  power_tone.pause(!(repInProgress || reps > 0));
+  float bottom = -1.0*max(repThresholds[0],repThresholds[1])/(lines/2) + 1;
+  float top = -1.0*min(repThresholds[0],repThresholds[1])/(lines/2) + 1;
+  float pt_power = min(max(gridY - bottom, 0) / (top-bottom),1);
+  power_tone_pitch.setValue(pt_pitch + (15*pt_power));
+  power_tone_glide.setValue(pt_power*0.39 + 0.01);
   boolean down = repThresholds[0] > repThresholds[1];
   float green = -1.0*repThresholds[1]/(lines/2) + 1;
   float red = -1.0*repThresholds[0]/(lines/2) + 1;
@@ -137,8 +152,10 @@ void updateWorkout() {
         }
       }
     } else {
-      if (gridY <= green) {
+      if (gridY >= green) {
         repInProgress = true;
+      } else {
+        startWorkout = false;
       }
     }
   } else if (!down && reps < reps_wanted) {
@@ -156,13 +173,17 @@ void updateWorkout() {
         }
       }
     } else {
-      if (gridY >= green) {
+      if (gridY <= green) {
         repInProgress = true;
+      } else {
+        startWorkout = false;
       }
     }
   } else {
     //TODO: Summarize workout, startWorkout = false
+    startWorkout = false;
   }
+  
   //println("Rep in progress: " + repInProgress);
   //println("Rep halfDone: " + repHalfDone);
   //println("Reps: " + reps);
