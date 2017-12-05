@@ -44,7 +44,13 @@ void draw() {
 }
 
 void mousePressed() {
+  //resets workout, toggles start/stop
   startWorkout = !startWorkout;
+  reps = 0; //Reps done
+  repScores = new float[reps_wanted]; //For storing a score for a rep. Might need to find a better system.
+  repHalfDone = false;
+  repInProgress = false;
+  repTimer = 0;
 }
 
 //Class for managing menu window.

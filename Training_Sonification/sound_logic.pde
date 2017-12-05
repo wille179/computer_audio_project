@@ -25,6 +25,7 @@ int reps_wanted = 10; //Reps desired for a set
 float[] repScores = new float[reps_wanted]; //For storing a score for a rep. Might need to find a better system.
 float[] repThresholds = new float[2]; //For matching the sonification to the vertical motion and horizontal lines on grid.
 boolean repHalfDone = false;
+boolean repInProgress = false;
 int repTimer = 0;
 boolean startWorkout = false;
 
@@ -59,6 +60,13 @@ void updateSound() {
   if (workout == -1) {
     startWorkout = false;
   }
+  if(lean_left.getSample().getLength() * 3 < lean_left.getPosition()){
+    lean_left.setPosition(0);
+  }
+  if (lean_right.getSample().getLength() * 3 < lean_right.getPosition()) {
+    lean_right.setPosition(0);
+  }
+  
   p.setPos(gridX*1.2*(mirror_sound?-1:1));
   if (startWorkout && workout != -1 && abs(gridX) > 0.2) {
     beep.pause(false);
@@ -109,13 +117,61 @@ void updateWorkout() {
   if (!startWorkout || workout < 0) {
     return;
   }
-  float bottom =  max(repThresholds[0],repThresholds[1]);
-  float top = min(repThresholds[0],repThresholds[1]);
-  if (workout == 0) { //Bench Press
-    
-  } else if (workout == 1) {//Squat
-    
-  } else { //Dead Lift
-    
+  float bottom = max(repThresholds[0],repThresholds[1]) / (lines*-1.0);
+  float top = min(repThresholds[0],repThresholds[1]) / (lines*-1.0);
+  boolean down = repThresholds[0] > repThresholds[1];
+  float green = -1.0*repThresholds[1]/(lines/2) + 1;
+  float red = -1.0*repThresholds[0]/(lines/2) + 1;
+  if (down && reps < reps_wanted) {
+    if (repInProgress) {
+      if (repHalfDone) {
+        if (gridY >= green) {
+          repHalfDone = false;
+          repInProgress = false;
+          reps += 1;
+        }
+      } else {
+        if (gridY <= red) {
+          repHalfDone = true;
+          //TODO: play ding
+        }
+      }
+    } else {
+      if (gridY <= green) {
+        repInProgress = true;
+      }
+    }
+  } else if (!down && reps < reps_wanted) {
+    if (repInProgress) {
+      if (repHalfDone) {
+        if (gridY <= green) {
+          repHalfDone = false;
+          repInProgress = false;
+          reps += 1;
+        }
+      } else {
+        if (gridY >= red) {
+          repHalfDone = true;
+          //TODO: play ding
+        }
+      }
+    } else {
+      if (gridY >= green) {
+        repInProgress = true;
+      }
+    }
+  } else {
+    //TODO: Summarize workout, startWorkout = false
   }
+  //println("Rep in progress: " + repInProgress);
+  //println("Rep halfDone: " + repHalfDone);
+  //println("Reps: " + reps);
+  
+  //if (workout == 0) { //Bench Press
+    
+  //} else if (workout == 1) {//Squat
+    
+  //} else { //Dead Lift
+    
+  //}
 }

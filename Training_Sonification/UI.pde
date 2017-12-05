@@ -1,4 +1,5 @@
 RadioButton modeRadio;
+int lines = 20;
 
 // Sets up the controlP5 menu for the secondary window.
 void setupP5() {
@@ -41,7 +42,6 @@ void setupP5() {
   
 */
 void drawGrid(int cX, int cY, float[] vL, float[] hL) {
-  int lines = 20;
   int squareWidth = gridWidth/lines;
   int squareHeight = gridHeight/lines;
   stroke(180);
